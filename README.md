@@ -62,3 +62,19 @@ To get a list of reports for a user in a specific region:
 graphutil user reports someone@example.com --output table --query "[?contains(department, 'EMEA')]"
 ```
 
+#### photo
+
+To get a photo for a user:
+
+```bash
+grahputil user photo someone@example.com output_filename.jpg
+```
+
+This can be combined with other queries, e.g.
+
+```bash
+graphutil user reports someone@example.com --output json  --query "[?contains(department, 'EMEA')] | [].upn" \
+	| jq -r ".[]"\
+	| xargs -I {} graphutil user photo {} {}.jpg
+```
+

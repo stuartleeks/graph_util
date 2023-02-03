@@ -9,7 +9,7 @@
 			"type": "python",
 			"request": "launch",
 			// "program": "${file}",
-			"program": "${workspaceFolder}/app.py",
+			"program": "${workspaceFolder}/graphutil/app.py",
 			"console": "integratedTerminal",
 			"justMyCode": false
 		}

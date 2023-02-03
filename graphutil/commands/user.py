@@ -2,7 +2,7 @@
 import click
 import json
 
-from graphutil.graph.user import get_user_with_reports, flatten_users
+from graphutil.graph.user import get_user_photo, get_user_with_reports, flatten_users
 from graphutil.output import output_result, output_option, query_option
 
 
@@ -11,7 +11,7 @@ def user_command() -> None:
     pass
 
 
-@click.command("reports")
+@click.command("reports", help="Get all reports for a user")
 @click.argument("user")
 @output_option()
 @query_option()
@@ -28,4 +28,12 @@ def user_reports_command(user, output_format, query):
     )
 
 
+@click.command("photo", help="Get a user's photo")
+@click.argument("user")
+@click.argument("filename")
+def user_photo(user, filename):
+    get_user_photo(user, filename)
+
+
+user_command.add_command(user_photo)
 user_command.add_command(user_reports_command)

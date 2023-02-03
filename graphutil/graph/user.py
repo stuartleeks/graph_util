@@ -45,7 +45,11 @@ def get_user_reports(user_name):
             "$select": "displayName,mail,userPrincipalName,city,country,department,jobTitle,officeLocation,businessPhones"
         },
     )
-    for user_json in result.json()["value"]:
+    value = result.json().get("value", None)
+    if not value:
+        raise Exception("No value in response: " + result.text)
+
+    for user_json in value:
         user = user_from_json(user_json)
         user["reports"] = get_user_reports(user["upn"])
         reports.append(user)
@@ -64,6 +68,15 @@ def get_user_with_reports(user_name):
     user = user_from_json(user_json)
     user["reports"] = get_user_reports(user["upn"])
     return user
+
+
+def get_user_photo(user_name, filename):
+    """Gets a user's photo"""
+    result = get_graph_client().get(
+        f"https://graph.microsoft.com/v1.0/users/{user_name}/photo/$value",
+    )
+    with open(filename, "wb") as f:
+        f.write(result.content)
 
 
 def flatten_users(users):
