@@ -19,14 +19,12 @@ def user_from_json(user_json):
     return {
         "upn": user_json.get("userPrincipalName", ""),
         "name": user_json.get("displayName", ""),
-        "email": user_json.get("mail", ""),
-        "city": user_json.get("city", ""),
-        "country": user_json.get("country", ""),
-        "department": user_json.get("department", ""),
-        "jobTitle": user_json.get("jobTitle", ""),
-        "office": user_json.get("officeLocation", "")
-        if "officeLocation" in user_json
-        else "",
+        "email": user_json.get("mail", "") or "",
+        "city": user_json.get("city", "") or "",
+        "country": user_json.get("country", "") or "",
+        "department": user_json.get("department", "") or "",
+        "jobTitle": user_json.get("jobTitle", "") or "",
+        "office": user_json.get("officeLocation", "") or "",
         "phone": user_json.get("businessPhones", [])[0]
         if len(user_json.get("businessPhones", [])) > 0
         else "",
@@ -45,9 +43,11 @@ def get_user_reports(user_name):
             "$select": "displayName,mail,userPrincipalName,city,country,department,jobTitle,officeLocation,businessPhones"
         },
     )
+    if result.status_code < 200 or result.status_code >= 300:
+        raise Exception(f"Error getting user ({user_name}): {result.text}")
     value = result.json().get("value", None)
     if not value:
-        raise Exception("No value in response: " + result.text)
+        return reports
 
     for user_json in value:
         user = user_from_json(user_json)
@@ -64,6 +64,8 @@ def get_user_with_reports(user_name):
             "$select": "displayName,mail,userPrincipalName,city,country,department,jobTitle,officeLocation,businessPhones"
         },
     )
+    if result.status_code < 200 or result.status_code >= 300:
+        raise Exception(f"Error getting user ({user_name}): {result.text}")
     user_json = result.json()
     user = user_from_json(user_json)
     user["reports"] = get_user_reports(user["upn"])
