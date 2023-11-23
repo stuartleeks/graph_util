@@ -12,6 +12,12 @@ install-cli: ## install CLI (note, run `source <(_GRAPHUTIL_COMPLETE=bash_source
 	sudo rm -rf build dist graphutil.egg-info
 	sudo python setup.py install
 
+# install CLI (note, run `source <(_GRAPHUTIL_COMPLETE=bash_source graphutil)` to set up bash completion)
+install-cli-dev:
+	sudo rm -rf build dist graphutil.egg-info && \
+	sudo pip install --editable .
+	@echo 'Run "source <(_GRAPHUTIL_COMPLETE=bash_source graphutil)" to set up bash completion'
+
 build-package: ## build package
 	./scripts/build.sh
 

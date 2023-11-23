@@ -24,7 +24,7 @@ def user_reports_command(user, output_format, query):
         result_json,
         output_format=output_format,
         query=query,
-        default_table_query=r"[].{name:name, mail:mail, upn:upn, department:department}",
+        default_table_query=r"[].{name:name, mail:mail, upn:upn, department:department, jobTitle:jobTitle}",
     )
 
 
